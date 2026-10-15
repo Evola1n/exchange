@@ -1,81 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Currency Converter</title>
+    <meta name="theme-color" content="#0b0d12">
+    <title>Конвертер валют</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="container">
-        <h1>Currency Converter</h1>
-
-        <div class="form">
-            <div class="input-group">
-                <label for="fromCurrency">From</label>
-                <select id="fromCurrency">
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
-                    <option value="CNY">CNY</option>
-                    <option value="GBP">GBP</option>
-                    <option value="UAH">UAH</option>
-                    <option value="RUB">RUB</option>
-                    <option value="PLN">PLN</option>
-                </select>
+    <main class="container">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Курсы валют</p>
+                <h1>Конвертер валют</h1>
             </div>
+            <span class="live-indicator"><span></span> Онлайн</span>
+        </header>
 
-            <button type="button" class="swap" id="swap" aria-label="Swap currencies">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/>
-                </svg>
-            </button>
+        <div class="workspace-grid">
+            <section class="rates-section" aria-labelledby="ratesHeading">
+                <div class="section-heading rates-heading">
+                    <div>
+                        <p class="eyebrow">Актуальные значения</p>
+                        <h2 id="ratesHeading">Курсы валют</h2>
+                    </div>
+                    <label class="base-currency-control" for="baseCurrency">
+                        <span>Базовая</span>
+                        <select id="baseCurrency" aria-label="Базовая валюта для таблицы курсов">
+                            <option value="UAH" selected>UAH</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="CNY">CNY</option>
+                            <option value="GBP">GBP</option>
+                            <option value="PLN">PLN</option>
+                            <option value="RUB">RUB</option>
+                        </select>
+                    </label>
+                    <button type="button" class="refresh-button" id="refreshRates" aria-label="Обновить курсы">↻</button>
+                </div>
+                <p class="rates-caption" id="ratesCaption">Загрузка курсов...</p>
+                <div class="rates-table-wrap">
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Валюта</th>
+                                <th scope="col">За 1 <span id="baseCurrencyLabel">UAH</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ratesTableBody">
+                            <tr><td colspan="2" class="table-placeholder">Получаем актуальные курсы...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-            <div class="input-group">
-                <label for="toCurrency">To</label>
-                <select id="toCurrency">
-                    <option value="USD">USD</option>
-                    <option value="EUR" selected>EUR</option>
-                    <option value="CNY">CNY</option>
-                    <option value="GBP">GBP</option>
-                    <option value="UAH">UAH</option>
-                    <option value="RUB">RUB</option>
-                    <option value="PLN">PLN</option>
-                </select>
-            </div>
+            <section class="converter-section" aria-labelledby="converterHeading">
+                <div class="section-heading converter-heading">
+                    <div>
+                        <p class="eyebrow">Быстрый расчёт</p>
+                        <h2 id="converterHeading">Конвертер</h2>
+                    </div>
+                </div>
+                <div class="form">
+                    <div class="input-group amount-group">
+                        <label for="amount">Сумма</label>
+                        <input type="number" id="amount" placeholder="0.00" inputmode="decimal" min="0" step="any" autocomplete="off">
+                    </div>
 
-            <div class="input-group">
-                <label for="amount">Amount</label>
-                <input type="number" id="amount" placeholder="0.00" inputmode="decimal">
-            </div>
+                    <div class="input-group from-group">
+                        <label for="fromCurrency">Из валюты</label>
+                        <select id="fromCurrency">
+                            <option value="UAH" selected>UAH — гривна</option>
+                            <option value="USD">USD — доллар США</option>
+                            <option value="EUR">EUR — евро</option>
+                            <option value="CNY">CNY — юань</option>
+                            <option value="GBP">GBP — фунт</option>
+                            <option value="PLN">PLN — злотый</option>
+                            <option value="RUB">RUB — рубль</option>
+                        </select>
+                    </div>
 
-            <button type="button" class="convert" onclick="convertCurrency()">Convert</button>
+                    <button type="button" class="swap" id="swap" aria-label="Поменять валюты местами" title="Поменять валюты местами">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/>
+                        </svg>
+                    </button>
+
+                    <div class="input-group to-group">
+                        <label for="toCurrency">В валюту</label>
+                        <select id="toCurrency">
+                            <option value="UAH">UAH — гривна</option>
+                            <option value="USD" selected>USD — доллар США</option>
+                            <option value="EUR">EUR — евро</option>
+                            <option value="CNY">CNY — юань</option>
+                            <option value="GBP">GBP — фунт</option>
+                            <option value="PLN">PLN — злотый</option>
+                            <option value="RUB">RUB — рубль</option>
+                        </select>
+                    </div>
+                </div>
+
+                <p class="status-message" id="conversionStatus" role="status" aria-live="polite"></p>
+
+                <section class="result-card" id="resultPanel" aria-live="polite" hidden>
+                    <div class="result-copy">
+                        <p class="result-label">Результат</p>
+                        <p id="result"></p>
+                        <p class="rate-caption" id="rateCaption"></p>
+                    </div>
+                    <button type="button" class="copy-button" id="copyResult" disabled>Копировать</button>
+                </section>
+            </section>
         </div>
-
-        <p id="result"></p>
-    </div>
+    </main>
 
     <script src="scripts.js"></script>
-    <script>
-        // Поменять валюты местами (+ пересчитать, если уже введена сумма)
-        document.getElementById('swap').addEventListener('click', function () {
-            const from = document.getElementById('fromCurrency');
-            const to = document.getElementById('toCurrency');
-            [from.value, to.value] = [to.value, from.value];
-            if (document.getElementById('amount').value) convertCurrency();
-        });
-
-        // Анимация появления результата при каждом пересчёте
-        const result = document.getElementById('result');
-        new MutationObserver(function () {
-            result.classList.remove('pop');
-            void result.offsetWidth;
-            result.classList.add('pop');
-        }).observe(result, { childList: true, characterData: true, subtree: true });
-    </script>
-
 </body>
 </html>
